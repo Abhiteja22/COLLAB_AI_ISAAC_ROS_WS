@@ -3,6 +3,8 @@ from lang_sam import LangSAM
 import pyrealsense2 as rs
 import numpy as np
 import cv2
+import pickle
+from pathlib import Path
 
 pipeline = rs.pipeline()
 config = rs.config()
@@ -28,9 +30,10 @@ print("Langsam")
 model = LangSAM()
 image_pil = Image.open("realsense_snapshot.png").convert("RGB")
 text_prompt = "mug."
-masks, boxes, phrases, logits = model.predict([image_pil], [text_prompt])
-print(masks)
-print(boxes)
-print(phrases)
-print(logits)
-print("Langsam end")
+results = model.predict([image_pil], [text_prompt]) # masks, boxes, phrases, logits
+
+output_path = Path(__file__).parent.parent / 'shared_data' / 'detection_results.pkl'
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+with open(output_path, 'wb') as f:
+    pickle.dump(results, f)

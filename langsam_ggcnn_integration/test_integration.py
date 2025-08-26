@@ -2,6 +2,8 @@
 import numpy as np
 import cv2
 from .grasp_processor import process_langsam_with_ggcnn
+import pickle
+from pathlib import Path
 
 def main():
     """Test the LangSAM + GGCNN integration"""
@@ -18,15 +20,21 @@ def main():
     # }]
 
     # Fruits
-    langsam_output = [{
-        'scores': np.array([0.35344404, 0.3444759 , 0.37005422, 0.30139458], dtype=np.float32), 
-        'labels': ['strawberry', 'strawberry', 'strawberry', 'strawberry'], 
-        'boxes': np.array([[226.51028, 393.82562, 314.58923, 481.4544 ],
-                        [340.99277, 383.18506, 453.94305, 467.6969 ],
-                        [337.6512 , 258.9217 , 430.52557, 372.76108],
-                        [273.6812 , 337.5617 , 344.54135, 417.60944]], dtype=np.float32), 
-        'masks': np.random.rand(2, 450, 680).astype(np.float32), 
-        'mask_scores': np.array([0.9439467 , 0.9368757 , 0.94181526, 0.93539226], dtype=np.float32)}]
+    # langsam_output = [{
+    #     'scores': np.array([0.35344404, 0.3444759 , 0.37005422, 0.30139458], dtype=np.float32), 
+    #     'labels': ['strawberry', 'strawberry', 'strawberry', 'strawberry'], 
+    #     'boxes': np.array([[226.51028, 393.82562, 314.58923, 481.4544 ],
+    #                     [340.99277, 383.18506, 453.94305, 467.6969 ],
+    #                     [337.6512 , 258.9217 , 430.52557, 372.76108],
+    #                     [273.6812 , 337.5617 , 344.54135, 417.60944]], dtype=np.float32), 
+    #     'masks': np.random.rand(2, 450, 680).astype(np.float32), 
+    #     'mask_scores': np.array([0.9439467 , 0.9368757 , 0.94181526, 0.93539226], dtype=np.float32)}]
+    
+
+    input_path = Path(__file__).parent.parent / 'shared_data' / 'detection_results.pkl'
+
+    with open(input_path, 'rb') as f:
+        langsam_output = pickle.load(f)
     
     # Load your depth image - REPLACE THIS PATH
     depth_image_path = "path/to/your/depth_image.png"  # CHANGE THIS
